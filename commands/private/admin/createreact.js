@@ -1,12 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { PermissionFlagsBits } = require('discord-api-types/v10')
 const { MessageActionRow, MessageButton } = require('discord.js');
-const config = require('./utils/config.json')
-
-const fetch = (...args) => import('node-fetch')
-    .then(({
-        default: fetch
-    }) => fetch(...args))
+const config = require('../../../library/utils/config.json')
 
 module.exports = {
 
@@ -17,7 +12,7 @@ module.exports = {
     async run(interaction) {
 
 
-        const channel = interaction.channel //.client.channels.cache.get(config.channel)
+        const channel = interaction.channel
 
         if (!channel) {
             return interaction.reply({

@@ -4,9 +4,7 @@ const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v10')
 
 const path = require('path')
-require('dotenv').config({
-    path: path.resolve(__dirname, '../../.env')
-})
+
 
 const GUILDID = process.env.GUILDID
 const CLIENTID = process.env.CLIENTID
@@ -20,6 +18,7 @@ module.exports = async (client) => {
         
         for (const file of files) {
             const cmd = require(path.resolve('./', file))
+            if (!cmd.data) continue
             client.commands.set(cmd.data.name, cmd)
         }
 
@@ -31,8 +30,8 @@ module.exports = async (client) => {
             .map((cmd) => cmd.data.toJSON())
 
         if (!commands) return console.error()
-        
-        console.log('Refreshing application (/) commands:', files); 
+
+        console.log('Refreshing application (/) commands', Array.from(client.commands.keys()));
         await rest.put(Routes.applicationGuildCommands(CLIENTID, GUILDID), { 
             body: commands
         }).catch((error) => {

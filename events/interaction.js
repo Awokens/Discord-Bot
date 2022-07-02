@@ -1,3 +1,6 @@
+
+const config = require('../library/utils/config.json')
+
 module.exports = {
     name: 'interactionCreate',
     async run(interaction) {
@@ -19,42 +22,71 @@ module.exports = {
 
         if (!interaction.isButton()) return
 
-        switch (interaction.component.label) {
-            case 'nerd':
-            case 'Updates':
+        const label = interaction.component.label
+        const roles = config.roles
 
-                const role = interaction.guild.roles
-                    .cache.get(interaction.component.customId)
-
-                if (!role) {
-                    return interaction.reply({
-                        content: "This role doesn't exist.",
-                        ephemeral: true
-                    })
-                }
-
-                const member = interaction.member
-
-
-                if (member.roles.cache.has(role.id)) {
-                    member.roles.remove(role).catch(console.error)
-                } else {
-                    member.roles.add(role).catch(console.error)
-                }
-
-                interaction.reply({
-                    content: 'Updated your roles, double-check your roles if anything is missing or was suppose to be removed.',
-                    ephemeral: true
-                })
-
-
-                break;
-            default:
-                interaction.reply({
-                    content: 'This button either unknown or outdated.',
-                    ephemeral: true
-                })
+        if (!roles || roles.some((id) => id === label)) return
+        
+        const role = interaction.guild.roles
+            .cache.get(interaction.component.customId)
+    
+        if (!role) {
+            return interaction.reply({
+                content: "This role doesn't exist.",
+                ephemeral: true
+            })
         }
+    
+        const member = interaction.member
+    
+    
+        if (member.roles.cache.has(role.id)) {
+            member.roles.remove(role).catch(console.error)
+        } else {
+            member.roles.add(role).catch(console.error)
+        }
+    
+        interaction.reply({
+            content: 'Updated your roles, double-check your roles if anything is missing or was suppose to be removed.',
+            ephemeral: true
+        })
+
+        // switch (interaction.component.label) {
+        //     case 'nerd':
+        //     case 'Updates':
+
+        //         const role = interaction.guild.roles
+        //             .cache.get(interaction.component.customId)
+
+        //         if (!role) {
+        //             return interaction.reply({
+        //                 content: "This role doesn't exist.",
+        //                 ephemeral: true
+        //             })
+        //         }
+
+        //         const member = interaction.member
+
+
+        //         if (member.roles.cache.has(role.id)) {
+        //             member.roles.remove(role).catch(console.error)
+        //         } else {
+        //             member.roles.add(role).catch(console.error)
+        //         }
+
+        //         interaction.reply({
+        //             content: 'Updated your roles, double-check your roles if anything is missing or was suppose to be removed.',
+        //             ephemeral: true
+        //         })
+
+
+        //         break;
+        //     default:
+        //         interaction.reply({
+        //             content: 'This button either unknown or outdated.',
+        //             ephemeral: true
+        //         })
+        // }
 
     }
 }

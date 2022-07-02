@@ -8,15 +8,19 @@ module.exports = async (client) => {
 
         if (error) throw new Error(error)
 
-        console.info('Registering listeners (events):', files)
+        const events = []
 
         try {
             for (const file of files) {
                 const event = require(path.resolve('./', file))
+                if (!event.name) continue
                 client.on(event.name, (...args) => event.run(...args))
+                events.push(event.name)
             }
         } catch (error) {
             throw new Error(error)
+        } finally {
+            console.info('Registering listeners (events):', events)
         }
     })
 
