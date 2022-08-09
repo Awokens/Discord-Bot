@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { PermissionFlagsBits } = require('discord-api-types/v10')
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const config = require('../../../library/utils/config.json')
 
 module.exports = {
@@ -21,7 +21,6 @@ module.exports = {
             })
         }
 
-
         const roles = config.roles
 
         if (!roles || roles.size < 1) {
@@ -31,7 +30,7 @@ module.exports = {
             })
         }
         
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
 
         for (const id of roles) {
 
@@ -42,10 +41,10 @@ module.exports = {
                     ephemeral: true
                 })
             }
-            row.addComponents(new MessageButton()
-                .setCustomId(id)
+            row.addComponents(new ButtonBuilder()
+                .setCustomId()
                 .setLabel(role.name)
-                .setStyle('PRIMARY'))            
+                .setStyle(ButtonStyle.Primary))            
         }
 
         await channel.send({
